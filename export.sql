@@ -9,13 +9,15 @@ CREATE TABLE Skola.dbo.Personal (
 	Personnummer nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	Förnamn nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	Efternamn nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	Lön smallmoney NULL,
+	Anställningsdatum datetime NULL,
 	CONSTRAINT PK_Personal PRIMARY KEY (PersonalID)
 );
 
 CREATE TABLE Skola.dbo.Roller (
 	RollID int IDENTITY(1,1) NOT NULL,
 	RollNamn nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
-	CONSTRAINT PK_Roller PRIMARY KEY (RollID)
+	CONSTRAINT PK_Rollerasdf PRIMARY KEY (RollID)
 );
 
 CREATE TABLE Skola.dbo.Studenter (
@@ -61,6 +63,15 @@ CREATE TABLE Skola.dbo.Betyg (
 );
 GO
 
+CREATE PROCEDURE [dbo].[LookUpStudent] @ID INT
+AS
+BEGIN
+    SELECT *
+    FROM Studenter 
+    WHERE (StudentID = @ID)
+END;
+GO
+
 CREATE PROCEDURE [dbo].[SelectAllPersonal] @Roll INT = NULL
 AS
 BEGIN
@@ -72,20 +83,23 @@ BEGIN
 END
 GO
 
-INSERT INTO Skola.dbo.Personal (Personnummer,Förnamn,Efternamn) VALUES
-	 (N'19460314-2672',N'Isabelle',N'Webb'),
-	 (N'20151121-2498',N'Imogene',N'Simon'),
-	 (N'19720128-1008',N'Rod',N'Sears'),
-	 (N'20000229-1098',N'Henrik',N'Håkansson'),
-	 (N'20011017-5432',N'Johanna',N'Jansson'),
-	 (N'20030405-2109',N'Karl',N'Karlsson'),
-	 (N'19890411-5489',N'Isak',N'Adamas');
+INSERT INTO Skola.dbo.Personal (Personnummer,Förnamn,Efternamn,Lön,Anställningsdatum) VALUES
+	 (N'19460314-2672',N'Isabelle',N'Webb',65200.0000,'1998-02-08 00:00:00.0'),
+	 (N'20151121-2498',N'Imogene',N'Simon',33000.0000,'1998-06-18 00:00:00.0'),
+	 (N'19720128-1008',N'Rod',N'Sears',41000.0000,'2002-11-13 00:00:00.0'),
+	 (N'20000229-1098',N'Henrik',N'Håkansson',27400.0000,'2016-04-23 00:00:00.0'),
+	 (N'20011017-5432',N'Johanna',N'Jansson',24300.0000,'2020-09-02 00:00:00.0'),
+	 (N'20030405-2109',N'Karl',N'Karlsson',32700.0000,'2006-07-22 00:00:00.0'),
+	 (N'19890411-5489',N'Isak',N'Adamas',84000.0000,'2021-11-16 00:00:00.0'),
+	 (N'19780519-7836',N'Johnny',N'Cooks',27400.0000,'2018-11-15 00:00:00.0');
+
 
 
 INSERT INTO Skola.dbo.Roller (RollNamn) VALUES
 	 (N'Lärare'),
 	 (N'Administratör'),
-	 (N'Rektor');
+	 (N'Rektor'),
+	 (N'Städare');
 
 INSERT INTO Skola.dbo.RollerPersonal (RollID,PersonalID) VALUES
 	 (1,1),
@@ -95,7 +109,8 @@ INSERT INTO Skola.dbo.RollerPersonal (RollID,PersonalID) VALUES
 	 (1,6),
 	 (2,1),
 	 (3,1),
-	 (3,3);
+	 (3,3),
+	 (4,7);
 
 INSERT INTO Skola.dbo.Studenter (Personnummer,Förnamn,Efternamn) VALUES
 	 (N'20150703-4740',N'Melanie',N'Doyle'),
@@ -107,7 +122,8 @@ INSERT INTO Skola.dbo.Studenter (Personnummer,Förnamn,Efternamn) VALUES
 	 (N'19941010-2345',N'Gustav',N'Dahlström'),
 	 (N'19951203-8765',N'Emma',N'Eklund'),
 	 (N'19970308-3210',N'Oscar',N'Fransson'),
-	 (N'19981112-6543',N'Maria',N'Gustafsson');
+	 (N'19981112-6543',N'Maria',N'Gustafsson'),
+	 (N'20031109-1484',N'Jon',N'Nilsson');	 
 
 INSERT INTO Skola.dbo.Klasser (KlassID,StudentID) VALUES
 	 (1,1),
@@ -146,4 +162,6 @@ INSERT INTO Skola.dbo.Betyg (Resultat,Datum,PersonalID,StudentID,KursID) VALUES
 	 (N'G','2022-06-04 00:00:00.0',4,4,2),
 	 (N'VG','2022-06-04 00:00:00.0',4,5,3),
 	 (N'U','2022-03-09 00:00:00.0',5,7,3),
-	 (N'G','2023-07-18 00:00:00.0',6,8,4);
+	 (N'G','2023-07-18 00:00:00.0',6,8,4),
+	 (N'VG','2024-01-05 14:29:25.53',8,4,2),
+	 (N'G','2024-01-05 14:47:24.183',4,2,1);
